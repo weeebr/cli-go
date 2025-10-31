@@ -2,6 +2,9 @@
 
 A collection of command-line tools built with Go.
 
+<img width="1021" height="497" alt="screenshot" src="https://github.com/user-attachments/assets/d150b867-9919-4c38-9046-01f64495d8c5" />
+
+
 ## Structure
 
 - `/<group>/<tool>/main.go` → builds to binary name
