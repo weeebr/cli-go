@@ -1,0 +1,54 @@
+---
+description: Global Go CLI Standards
+alwaysApply: true
+---
+
+# Global Go CLI Standards
+
+## Code Quality
+
+- Use `gofmt` for formatting
+- Run `golangci-lint` and `staticcheck` for linting
+- Follow Go naming conventions (camelCase for exported, lowercase for private)
+- Keep functions under 50 lines when possible
+
+## Hard Constraints
+
+- **≤300 LOC per tool** - enforce strict size limits
+- **No globals** - use dependency injection and function parameters
+- **No fixtures** - no test data files, validate via terminal commands only
+- **No test files** - test functionality via terminal execution
+
+## Output Contract
+
+- **stdout**: Final JSON or user data only
+- **stderr**: Logs, traces, diagnostics, error messages
+- **Never mix outputs** - prevents broken CLI piping and JSON parsing
+
+## Flag Precedence
+
+- `--output` determines target (stdout, file, clipboard, webhook)
+- Auxiliary flags (`--path`, `--url`) only read when mode matches:
+  - `--path` only with `--output=file`
+  - `--url` only with `--output=webhook`
+- Ensures deterministic behavior for automation
+
+## Project Structure
+
+- `/<group>/<tool>/main.go` → builds to binary name
+- Groups: `git/`, `ai/`, `tools/`, `_internal/`
+- Internal libs in `_internal/` (no package main)
+
+## Error Handling
+
+- Exit non-zero on error
+- JSON `{"error": "..."}` to stdout for structured errors
+- Plain error messages to stderr for diagnostics
+- Never leave orphaned processes or files
+
+## Output Modes
+
+- `stdout` (default): JSON to stdout, logs to stderr
+- `file`: write to `--path`, logs to stderr
+- `clipboard`: copy to system clipboard, logs to stderr
+- `webhook`: POST to `--url`, logs to stderr

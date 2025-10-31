@@ -1,0 +1,42 @@
+# Encrypted credentials
+.cli-go/
+*.enc
+
+# Sensitive configuration
+config.yml
+
+# Build artifacts
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace
+go.work
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+tmp/
+temp/
+*.tmp
+input.md
+.grok/
+.chatgpt-cli/
+
+# Cache
+.cache/
+_internal/cache/
+_internal/cache/*

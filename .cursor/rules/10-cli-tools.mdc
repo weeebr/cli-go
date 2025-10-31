@@ -1,0 +1,66 @@
+---
+description: CLI Tools Development Patterns
+globs: ["git/**/*.go", "ai/**/*.go", "tools/**/*.go"]
+alwaysApply: false
+---
+
+# CLI Tools Development
+
+## Package Structure
+
+- Use `package main` for all CLI tools
+- Single `main.go` file per tool (≤300 LOC limit)
+- No subpackages within tool directories
+
+## Standard Flags
+
+- `--explain`: Show detailed explanation of what the tool does
+- `--compact`: Use compact JSON output format
+- `--output=stdout|file|clipboard|webhook`: Output destination
+- `--path=./output.json`: File path (only with `--output=file`)
+- `--url=https://...`: Webhook URL (only with `--output=webhook`)
+
+## Output Contract
+
+- **stdout**: Final JSON or user data only
+- **stderr**: Logs, traces, diagnostics
+- **Never mix outputs** - prevents broken CLI piping
+
+## Flag Precedence
+
+- `--output` determines target
+- Auxiliary flags only read when mode matches:
+  - `--path` only with `--output=file`
+  - `--url` only with `--output=webhook`
+- Ensures deterministic behavior
+
+## Error Handling
+
+- Exit non-zero on error
+- JSON `{"error": "..."}` to stdout for structured errors
+- Plain error messages to stderr for diagnostics
+- Never leave orphaned processes or files
+
+## JSON I/O Patterns
+
+- Read from stdin (JSON input)
+- Write to stdout (JSON output)
+- Use `_internal/io` for JSON read/write operations
+- Use `_internal/sys` for platform-specific operations (clipboard, notifications)
+
+## Credential Management
+
+- **NEVER create custom credential stores** - only use `_internal/config.NewEncryptedStore()`
+- **NEVER call `SaveCredentials()`** - read-only access via `Get*()` methods only
+- **NEVER introduce fallbacks** (env vars, config files, direct API key args)
+- **NEVER run setup logic** - credentials are pre-configured via `setup` tool
+- Error messages must direct users to run the `setup` tool
+- AI tools must use centralized encrypted store pattern exclusively
+
+## No Test Files
+
+- Validate functionality via terminal commands
+- Use `go run` for testing during development
+- No `*_test.go` files allowed
+- Test via actual CLI usage patterns
+- Tests vs APIs and MCPs = always with real-world data

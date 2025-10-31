@@ -1,0 +1,86 @@
+ringier:
+  default_project_key: PNT
+  default_user: name.lastname@ringier.ch
+
+editor:
+  command: cursor
+
+jira:
+  base_url: https://ringier.atlassian.net
+  email: name.lastname@ringier.ch
+  default_project: PNT
+
+repositories:
+  - owner: RingierAG
+    repo: orbit
+    path: /path/to/repo/orbit
+    main_branch: main
+    primary: true
+
+  - owner: rasch-dtc
+    repo: graphql-service
+    path: /path/to/repo/graphql-service
+    main_branch: develop
+    primary: false
+
+  - owner: rasch-dtc
+    repo: hexagon-gateway-service
+    path: /path/to/repo/hexagon-gateway-service
+    main_branch: develop
+    primary: false
+
+  - owner: rasch-dtc
+    repo: mailchimp-enrichment-service
+    path: /path/to/repo/mailchimp-enrichment-service
+    main_branch: develop
+    primary: false
+
+  - owner: rasch-dtc
+    repo: piano-hznews
+    path: /path/to/repo/piano-hznews
+    main_branch: develop
+    primary: false
+
+  - owner: rasch-dtc
+    repo: rasch-mail-templates
+    path: /path/to/repo/rasch-mail-templates
+    main_branch: develop
+    primary: false
+
+  - owner: rasch-dtc
+    repo: rasch-stack
+    path: /path/to/repo/rasch-stack
+    main_branch: develop
+    primary: true
+
+  - owner: rasch-dtc
+    repo: solid-service
+    path: /path/to/repo/solid-service
+    main_branch: develop
+    primary: false
+
+history:
+  default_days: 7
+  author_filter: "Name Lastname"
+
+ai:
+  default_models:
+    openai: gpt-4o
+    google: gemini-2.5-flash
+    anthropic: claude-haiku-4-5-20251001
+    xai: grok-code-fast-1
+
+prompts:
+  base_dir: /path/to/prompts
+
+tests:
+  - gstats --json
+  - gstats
+  - gname
+  - gmain
+  - grt
+  - jira 232
+  - jira 234 c
+  - jira orb-234
+  - jira user
+  - figma filteroptions

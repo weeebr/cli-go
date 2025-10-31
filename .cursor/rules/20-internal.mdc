@@ -1,0 +1,75 @@
+---
+description: Internal Libraries Development Patterns
+globs: ["_internal/**/*.go"]
+alwaysApply: false
+---
+
+# Internal Libraries Development
+
+## Package Structure
+
+- **No `package main`** - only exported functions
+- Use descriptive package names: `io`, `sys`, `utils`
+- Keep packages focused and cohesive
+- Export only necessary functions (capitalize for public API)
+
+## Library Organization
+
+### `_internal/io/`
+
+- JSON read/write operations
+- Output router (stdout/file/clipboard/webhook)
+- Compact/pretty formatting
+- Handle stdin/stdout/stderr separation
+
+### `_internal/sys/`
+
+- Platform-specific helpers
+- `pbcopy` for clipboard operations
+- `notify` for system notifications
+- `lsof` for port/process management
+- Cross-platform compatibility
+
+### `_internal/config/`
+
+- **THE ONLY credential access pattern** for the entire codebase
+- `SaveCredentials()` is ONLY for the `tools/setup/` tool
+- Internal AI libraries must use read-only `Get*()` methods
+- No environment variable fallbacks allowed
+- No alternative credential storage mechanisms
+
+### `_internal/utils/`
+
+- Argument parsing utilities
+- Error envelope creation
+- Tracing and logging helpers
+- Common validation functions
+
+## Output Contract
+
+- Libraries must respect caller's stdout/stderr separation
+- Never write to stdout unless explicitly requested
+- Use stderr for diagnostic information
+- Return structured data, let caller decide output destination
+
+## Design Principles
+
+- **Dependency injection**: Accept interfaces, not concrete types
+- **Pure functions**: Minimize side effects
+- **Error handling**: Return errors, don't panic
+- **Testability**: Functions should be easily testable
+
+## No Test Files
+
+- Validate via terminal commands
+- Test through CLI tool usage
+- No `*_test.go` files allowed
+- Focus on integration testing through actual usage
+
+## API Design
+
+- Use clear, descriptive function names
+- Accept context.Context for cancellation
+- Return errors explicitly
+- Use interfaces for external dependencies
+- Keep functions small and focused

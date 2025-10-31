@@ -1,0 +1,64 @@
+---
+description: Build System Patterns
+alwaysApply: false
+---
+
+# Build System Development
+
+## Manual Trigger Only
+
+- **Invoke with `@30-build`** - prevents unwanted build logic injection during routine code edits
+- Only apply when explicitly requested for build-related tasks
+- Avoids interference with normal code development
+
+## build.go Patterns
+
+- Walk groups: `git/`, `ai/`, `tools/`
+- Find directories with `package main` in Go files
+- Build to configurable output directory (default: `~/git-helpers/bin`)
+- Use `go build -o <output> ./<group>/<tool>`
+- Handle build errors gracefully with clear messages
+- **ALWAYS use `--affected` flag for incremental builds**
+
+## justfile Patterns
+
+- `affected`: Build only affected tools (incremental) - **PREFERRED**
+- `bin`: Build all tools to specified directory (full rebuild)
+- `install`: Use `go install ./...` for standard Go installation
+- `clean`: Remove build artifacts
+- Support configurable binary directory via `BIN` variable
+
+## Build Output
+
+- Default: `~/git-helpers/bin`
+- Configurable via `-o` flag in build.go
+- Ensure output directory exists before building
+- Clear success/failure messages for each tool
+
+## No Go Modules Changes
+
+- Don't modify go.mod or go.sum
+- Use existing module structure
+- Build from project root
+- Respect existing dependencies
+
+## Error Handling
+
+- Continue building other tools if one fails
+- Report specific build failures
+- Exit with non-zero code if any build fails
+- Clear error messages with tool names
+
+## Build Process
+
+1. Scan groups (git/, ai/, tools/)
+2. Find directories with package main
+3. Build each tool to output directory
+4. Report success/failure for each
+5. Exit with appropriate code
+
+## Incremental Build Rules
+
+- **Default to `--affected`** for development builds
+- **Use `just affected`** instead of `just bin` when possible
+- **Full rebuilds only** for clean builds or dependency changes
